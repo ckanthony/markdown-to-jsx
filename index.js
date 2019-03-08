@@ -722,18 +722,22 @@ export function compiler(markdown, options) {
 
   // eslint-disable-next-line no-unused-vars
   function h(tag, props, ...children) {
-    const overrideProps = get(options.overrides, `${tag}.props`, {});
+    if (typeof (tag) !== 'symbol') {
+      const overrideProps = get(options.overrides, `${tag}.props`, {});
 
-    return createElementFn(
-      getTag(tag, options.overrides),
-      {
-        ...overrideProps,
-        ...props,
-        className:
-          cx(props && props.className, overrideProps.className) || undefined,
-      },
-      ...children
-    );
+      return createElementFn(
+        getTag(tag, options.overrides),
+        {
+          ...overrideProps,
+          ...props,
+          className:
+            cx(props && props.className, overrideProps.className) || undefined,
+        },
+        ...children
+      );
+    } else {
+      return createElementFn(tag, {... props}, ...children);
+    }
   }
 
   function compile(input) {
@@ -760,17 +764,9 @@ export function compiler(markdown, options) {
 
     let jsx;
     if (arr.length > 1) {
-      jsx = inline ? <span key="outer">{arr}</span> : <div key="outer">{arr}</div>;
+      jsx = inline ? <span key="outer">{arr}</span> : <>{arr}</>;
     } else if (arr.length === 1) {
       jsx = arr[0];
-
-      // TODO: remove this for React 16
-      if (typeof jsx === 'string') {
-        jsx = <span key="outer">{jsx}</span>;
-      }
-    } else {
-      // TODO: return null for React 16
-      jsx = <span key="outer" />;
     }
 
     return jsx;
