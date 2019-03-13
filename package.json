@@ -3,7 +3,7 @@
   "description": "An unwarpped version of orginal markdown-to-jsx.",
   "homepage": "https://probablyup.github.io/markdown-to-jsx",
   "license": "MIT",
-  "version": "6.9.1a",
+  "version": "6.9.2a",
   "engines": {
     "node": ">= 4"
   },
